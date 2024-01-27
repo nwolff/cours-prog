@@ -10,10 +10,10 @@ def f1(x):
 
 
 def f2(x):
-    return np.sin(np.pi * (x - 4) / 8) * (x - 16)
+    return np.sin(np.pi * (x - 4) / 16) * (x - 16) + 1
 
 
-f = f1
+f = f2
 
 # Print a table of values
 table = [[x, round(f(x), 2)] for x in range(33)]
