@@ -43,6 +43,7 @@ class GameServer:
             "salon": "Vous êtes dans le salon. Il y a une porte au nord et une porte au sud.",
             "cuisine": "Vous êtes dans la cuisine. Il y a une porte au sud.",
             "jardin": "Vous êtes dans le jardin. Ca ne sent pas très bon",
+            "paradis": "Vous êtes dans au paradis. Cocas et tacos infinis",
         }
 
         # Envoi de la première description
@@ -63,6 +64,11 @@ class GameServer:
                     client_socket.sendall(
                         f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
                     )
+                elif command == "ouvrir frigo" and current_room == "cuisine":
+                    current_room = "paradis"
+                    client_socket.sendall(
+                        f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
+                    )
                 elif command == "sud" and current_room == "cuisine":
                     current_room = "salon"
                     client_socket.sendall(
@@ -70,6 +76,11 @@ class GameServer:
                     )
                 elif command == "sud" and current_room == "salon":
                     current_room = "jardin"
+                    client_socket.sendall(
+                        f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
+                    )
+                elif command == "nord" and current_room == "jardin":
+                    current_room = "salon"
                     client_socket.sendall(
                         f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
                     )
