@@ -1,0 +1,3 @@
+# The contents of the local directory don't belong in git
+/local/*
+!/local/.gitkeep
