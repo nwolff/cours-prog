@@ -12,8 +12,14 @@ import socket
 import sys
 from _thread import start_new_thread
 
+rooms = {
+    "salon": "Vous êtes dans le salon. Il y a une porte au nord et une porte au sud.",
+    "cuisine": "Vous êtes dans la cuisine. Il y a un frigo et une porte au sud.",
+    "jardin": "Vous êtes dans le jardin. Il y a un chien.",
+    "paradis": "Vous êtes au paradis. Cocas et tacos infinis",
+}
 
-# Création du serveur de jeu
+
 class GameServer:
     def __init__(self, host, port):
         self.host = host
@@ -24,6 +30,7 @@ class GameServer:
     def start(self):
         # Création d'un socket TCP
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.bind((self.host, self.port))
         self.socket.listen(1)
         print(f"Serveur en attente de connexion sur {self.host}:{self.port}...")
@@ -32,70 +39,55 @@ class GameServer:
             client_socket, client_address = self.socket.accept()
             self.clients.append(client_socket)
             print(f"Connexion établie avec {client_address}")
-            client_socket.sendall(b"Bienvenue dans le jeu d'aventure !\n")
             start_new_thread(self.handle_client, (client_socket,))
 
-    def handle_client(self, client_socket):
-        # Exemple d'aventure textuelle très simple
+    def handle_client(self, client_socket: socket.socket):
+
+        def send(text):
+            client_socket.sendall((text + "\n").encode())
+
+        def describe_room():
+            send(rooms[current_room])
+
+        send("Bienvenue dans le jeu d'aventure !")
         current_room = "salon"
+        describe_room()
 
-        rooms = {
-            "salon": "Vous êtes dans le salon. Il y a une porte au nord et une porte au sud.",
-            "cuisine": "Vous êtes dans la cuisine. Il y a une porte au sud.",
-            "jardin": "Vous êtes dans le jardin. Ca ne sent pas très bon",
-            "paradis": "Vous êtes dans au paradis. Cocas et tacos infinis",
-        }
-
-        # Envoi de la première description
-        client_socket.sendall(
-            f"Vous êtes dans une maison. {rooms[current_room]}\n".encode()
-        )
-
-        # Boucle de gestion des commandes
         while True:
             try:
-                client_socket.sendall(
-                    b"Que voulez-vous faire ? (nord, sud, est, ouest)\n"
-                )
+                send("Que voulez-vous faire ?")
                 command = client_socket.recv(1024).decode().strip().lower()
 
-                if command == "nord" and current_room == "salon":
+                if current_room == "salon" and command == "nord":
                     current_room = "cuisine"
-                    client_socket.sendall(
-                        f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
-                    )
-                elif command == "ouvrir frigo" and current_room == "cuisine":
+                    describe_room()
+                elif current_room == "cuisine" and command.startswith("ouvrir"):
                     current_room = "paradis"
-                    client_socket.sendall(
-                        f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
-                    )
-                elif command == "sud" and current_room == "cuisine":
+                    describe_room()
+                    client_socket.close()
+                elif current_room == "cuisine" and command == "sud":
                     current_room = "salon"
-                    client_socket.sendall(
-                        f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
-                    )
-                elif command == "sud" and current_room == "salon":
+                    describe_room()
+                elif current_room == "salon" and command == "sud":
                     current_room = "jardin"
-                    client_socket.sendall(
-                        f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
-                    )
-                elif command == "nord" and current_room == "jardin":
+                    describe_room()
+                elif current_room == "jardin" and command.startswith("caresse"):
+                    send("WOOF!")
+                elif current_room == "jardin" and command == "nord":
                     current_room = "salon"
-                    client_socket.sendall(
-                        f"Vous allez au {current_room}. {rooms[current_room]}\n".encode()
-                    )
+                    describe_room()
                 else:
-                    client_socket.sendall(b"Commande inconnue. Essayez nord ou sud.\n")
+                    send("Commande inconnue.")
 
             except (ConnectionResetError, BrokenPipeError):
                 print("Le client a été déconnecté.")
                 break
 
         client_socket.close()
+        self.clients.remove(client_socket)
 
 
-# Code principal
-def main():
+if __name__ == "__main__":
     host = "0.0.0.0"
     port = 12345
 
@@ -104,7 +96,3 @@ def main():
 
     server = GameServer(host, port)
     server.start()
-
-
-if __name__ == "__main__":
-    main()
