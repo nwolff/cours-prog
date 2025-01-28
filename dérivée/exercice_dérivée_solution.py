@@ -42,9 +42,13 @@ def f2(x):
     return math.sin(math.pi * (x - 4) / 16) * (x - 16) + 1
 
 
+"""
+Ecrivez votre programme à la suite de ce commentaire
+"""
 
 
 epsilon = 0.000001
+
 
 def deriv(f, x):
     return (f(x + epsilon) - f(x)) / epsilon
@@ -53,11 +57,12 @@ def deriv(f, x):
 def fonction_dérivée(f):
     def nouvelle_fonction(x):
         return deriv(f, x)
+
     return nouvelle_fonction
 
 
-f2_prime=fonction_dérivée(f2)
-f2_seconde=fonction_dérivée(f2_prime)
+f2_prime = fonction_dérivée(f2)
+f2_seconde = fonction_dérivée(f2_prime)
 
 write_line("f2", "f2'", "f2''")
 for i in range(320):
