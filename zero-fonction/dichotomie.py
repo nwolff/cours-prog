@@ -1,8 +1,5 @@
-#!/usr/bin/env python
-
-from icecream import ic
-
 from fonctions import f1 as f
+from icecream import ic
 
 ic.configureOutput(prefix="", includeContext=True)
 

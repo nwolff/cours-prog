@@ -1,12 +1,9 @@
-#!/usr/bin/env python3
-
 """
 ChatGPT 4o-Mini: écris un jeu d'aventure simple en python qui accepte des connexions sur un socket et permet de jouer avec telnet
 
 Puis ajout de la possibilité de se connecter à plusieurs avec :
 https://www.techwithtim.net/tutorials/python-online-game-tutorial/server
 """
-
 
 import socket
 import sys

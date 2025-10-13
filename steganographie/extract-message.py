@@ -10,5 +10,6 @@ if __name__ == "__main__":
 
     message_pixels = george_with_message_pixels - george_pixels
     message = Image.fromarray(message_pixels)
+
     brightened_message = message.point(lambda p: 255 if p > 0 else 0)
     brightened_message.save("local/extracted-message.png")

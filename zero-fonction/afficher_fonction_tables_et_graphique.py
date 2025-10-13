@@ -1,10 +1,7 @@
-#!/usr/bin/env python
-
 import matplotlib.pyplot as plt
 import numpy as np
-from tabulate import tabulate
-
 from fonctions import f2 as f
+from tabulate import tabulate
 
 # Print a table of values
 table = [[x, round(f(x), 2)] for x in range(33)]
