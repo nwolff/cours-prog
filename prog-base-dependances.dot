@@ -1,0 +1,19 @@
+digraph "Programmation" {
+    Listes;
+    Variables -> Types;
+    Expressions -> Types;
+    Expressions -> Variables;
+    Conditions -> Variables;
+    "Entrées/Sorties" -> Variables;
+    "Entrées/Sorties" -> Conversions;
+    Conversions -> Types;
+    "Branchements Conditionnels" -> Conditions;
+    Itération -> Variables;
+    Itération -> Conditions;
+    Itération -> Expressions;
+    Itération -> Listes;
+    Accumulation -> Itération;
+    Accumulation -> Variables;
+    Accumulation -> Expressions;
+    Accumulation -> Listes;
+}
