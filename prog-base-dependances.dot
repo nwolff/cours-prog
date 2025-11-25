@@ -1,7 +1,7 @@
 digraph "Programmation" {
-    Listes;
-    Variables -> Types;
     Expressions -> Types;
+    Variables -> Types;
+    Variables -> Expressions;
     Expressions -> Variables;
     Conditions -> Variables;
     "Entrées/Sorties" -> Variables;
@@ -11,6 +11,8 @@ digraph "Programmation" {
     Itération -> Variables;
     Itération -> Conditions;
     Itération -> Expressions;
+    Listes -> Types;
+    Listes -> Variables;
     Itération -> Listes;
     Accumulation -> Itération;
     Accumulation -> Variables;
